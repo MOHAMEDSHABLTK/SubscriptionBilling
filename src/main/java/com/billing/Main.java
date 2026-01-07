@@ -78,7 +78,7 @@ public class Main {
                         viewSubscriptionDetails(subscription);
                         break;
                     case 2:
-                        renewSubscription(subscription);
+                        renewSubscription(subscription, sc);
                         break;
                     case 3:
                         running = false;
@@ -104,8 +104,29 @@ public class Main {
         System.out.println("Status: " + (subscription.isExpired() ? "EXPIRED" : "ACTIVE"));
     }
 
-    private static void renewSubscription(Subscription subscription) {
+    private static void renewSubscription(Subscription subscription, Scanner sc) {
         try {
+            System.out.println("\nSelect plan for renewal:");
+            System.out.println("1. Monthly Plan (Rs299)");
+            System.out.println("2. Annual Plan (Rs299 * 12 with 10% discount)");
+            System.out.print("Enter choice: ");
+            int choice = sc.nextInt();
+            sc.nextLine(); // consume newline
+
+            Plan newPlan;
+            switch (choice) {
+                case 1:
+                    newPlan = new MonthlyPlan(299);
+                    break;
+                case 2:
+                    newPlan = new AnnualPlan(299);
+                    break;
+                default:
+                    System.out.println("Invalid choice! Renewal canceled.");
+                    return;
+            }
+
+            subscription.changePlan(newPlan);
             RenewalService renewalService = new RenewalService();
             renewalService.processRenewal(subscription);
         } catch (InvalidPaymentException e) {
