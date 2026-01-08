@@ -6,7 +6,7 @@ public class AnnualPlan extends Plan {
     }
     @Override
     public double calculateAmount(){
-        return price * 12 * 0.9; //10% discount
+        return price * 12 * 0.9;
     }
     @Override
     public String getPlanName() {

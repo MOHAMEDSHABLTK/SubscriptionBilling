@@ -49,6 +49,13 @@ public class Main {
             Subscription subscription = new Subscription(userName, plan);
 
             PaymentService paymentService = new PaymentService();
+            System.out.print("Confirm payment of Rs" + subscription.getAmount() + " (y/n): ");
+            String paymentChoice = sc.next().trim().toLowerCase();
+            sc.nextLine(); // consume newline
+            if (!paymentChoice.equals("y")) {
+                System.out.println("Payment canceled. Subscription not created.");
+                return;
+            }
             paymentService.validatePayment(subscription.getAmount());
 
             SubscriptionService subscriptionService = new SubscriptionService();
@@ -128,6 +135,13 @@ public class Main {
 
             subscription.changePlan(newPlan);
             RenewalService renewalService = new RenewalService();
+            System.out.print("Confirm renewal payment of Rs" + subscription.getAmount() + " (y/n): ");
+            String paymentChoice = sc.next().trim().toLowerCase();
+            sc.nextLine(); // consume newline
+            if (!paymentChoice.equals("y")) {
+                System.out.println("Renewal canceled by user.");
+                return;
+            }
             renewalService.processRenewal(subscription);
         } catch (InvalidPaymentException e) {
             System.out.println("Renewal failed: " + e.getMessage());
