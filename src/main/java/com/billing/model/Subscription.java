@@ -18,12 +18,16 @@ public class Subscription {
     }
     
     private LocalDate calculateExpiryDate() {
+        return calculateExpiryDate(startDate);
+    }
+
+    private LocalDate calculateExpiryDate(LocalDate baseDate) {
         if (plan instanceof MonthlyPlan) {
-            return startDate.plusMonths(1);
+            return baseDate.plusMonths(1);
         } else if (plan instanceof AnnualPlan) {
-            return startDate.plusYears(1);
+            return baseDate.plusYears(1);
         }
-        return startDate.plusMonths(1); // default
+        return baseDate.plusMonths(1); // default
     }
     
     public String getUserName(){
@@ -37,7 +41,7 @@ public class Subscription {
     public Plan getPlan() {
         return plan;
     }
-    
+
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -64,13 +68,12 @@ public class Subscription {
     }
     
     public void renew() {
-        this.startDate = LocalDate.now();
-        this.expiryDate = calculateExpiryDate();
+        LocalDate renewalBase = LocalDate.now().isAfter(expiryDate) ? LocalDate.now() : expiryDate;
+        this.expiryDate = calculateExpiryDate(renewalBase);
     }
     
     public void changePlan(Plan newPlan) {
+        // Switch plan without touching dates; renewal will recalc expiry based on the new plan.
         this.plan = newPlan;
-        this.startDate = LocalDate.now();
-        this.expiryDate = calculateExpiryDate();
     }
 }
